@@ -66,9 +66,12 @@ class Totem(Resource):
                 GraphEdge(
                     source=e.source,
                     target=e.target,
-                    arrows=(src_arrow, tgt_arrow),
+                    start_arrow=src_arrow,
+                    end_arrow=tgt_arrow,
                     color=color,
                     label=label,
+                    end_label=e.lc,
+                    start_label=e.lc_inverse,
                 )
             )
 
@@ -81,6 +84,6 @@ class Totem(Resource):
                 graphAttrs={
                     "overlap": "false",
                 },
-                edgeAttrs={"len": 3},
+                edgeAttrs={"len": 4},
             ),
         )
