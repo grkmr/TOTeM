@@ -7,7 +7,7 @@ from .resources.totem import Totem as TotemGraph
 from .util import mine_totem
 
 
-class MineInput(PluginInput, frozen=True):
+class MineInput(PluginInput):
     tau: float = Field(title="tau", gt=0, le=1, default=0.9)
 
 
@@ -17,7 +17,7 @@ class Totem(Plugin):
         "Generate Temporal Object Type Models (TOTeM) to uncover type-level temporal and cardinality relations"
         " in event logs"
     )
-    version = "0.1.0"
+    version = "1.3"
 
     @plugin_method(label="Discover TOTeM", description="Discovers a Temporal Object Type Models")
     def mine_totem(self, ocel: Annotated[OCEL, OCELAnnotation(label="Event Log")], input: MineInput) -> TotemGraph:
