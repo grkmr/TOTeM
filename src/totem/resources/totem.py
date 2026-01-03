@@ -22,8 +22,8 @@ class TotemEdge(BaseModel):
 
 
 class Totem(Resource):
-    label = "Totem"
-    description = "A totem graph"
+    label = "TOTeM"
+    description = "A TOTeM"
 
     object_types: list[str]
     edges: list[TotemEdge]
@@ -31,8 +31,6 @@ class Totem(Resource):
 
     def visualize(self) -> Graph:
         def tr_to_arrow(tr: Temporal_Relation_Constant | None) -> EdgeArrow | None:
-            # Cytoscape styles:
-            # P -> triangle, D -> tee, I -> circle, Ii/Di -> no arrow
             return {"P": "triangle", "D": "tee", "I": "circle", "Ii": None, "Di": None, None: None}[tr]
 
         def edge_label_for_forward(e: TotemEdge) -> str:

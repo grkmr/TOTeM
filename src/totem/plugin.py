@@ -19,6 +19,6 @@ class Totem(Plugin):
     )
     version = "1.3"
 
-    @plugin_method(label="Discover TOTeM", description="Discovers a Temporal Object Type Models")
+    @plugin_method(label="Discover TOTeM", description="Discovers a Temporal Object Type Model")
     def mine_totem(self, ocel: Annotated[OCEL, OCELAnnotation(label="Event Log")], input: MineInput) -> TotemGraph:
         return mine_totem(ocel.ocel, input.tau)
