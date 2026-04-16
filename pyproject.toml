@@ -20,7 +20,7 @@ dev = ["black>=25.1.0", "pre-commit>=4.2.0", "ruff>=0.12.7"]
 
 
 [tool.uv.sources]
-ocelescope = { git = "https://github.com/rwth-pads/ocelescope.git", subdirectory = "src/ocelescope" }
+ocelescope = { git = "https://github.com/promi4s/ocelescope.git", subdirectory = "src/ocelescope" }
 
 [tool.ty]
 # All rules are enabled as "error" by default; no need to specify unless overriding.
