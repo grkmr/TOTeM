@@ -31,11 +31,28 @@ def create_event_dict(ocel: OCEL) -> dict:
 
     object_cols = list(rename_map.values())
 
-    # Step 5: Normalize object columns (NaN → [], keep lists)
-    df[object_cols] = df[object_cols].applymap(lambda v: [] if isinstance(v, float) and math.isnan(v) else v)
+    def _normalize_obj_cell(v):
+        if v is None:
+            return []
+        if isinstance(v, float) and math.isnan(v):
+            return []
+        if isinstance(v, list):
+            return v
+        if isinstance(v, (set, tuple, np.ndarray)):
+            return list(v)
+        # fallback: wrap scalar values (e.g., a single object id) into a list
+        return [v]
 
-    # Step 6: Add a new "objects" column: merged object IDs from all types
-    df["objects"] = df[object_cols].apply(lambda row: [item for sublist in row for item in sublist], axis=1)
+    if object_cols:
+        df.loc[:, object_cols] = df.loc[:, object_cols].apply(lambda col: col.map(_normalize_obj_cell))
+        # Step 6: Add a new "objects" column: merged object IDs from all types
+        df["objects"] = df[object_cols].apply(
+            lambda row: [item for sublist in row for item in sublist],
+            axis=1,
+        )
+    else:
+        # No object-type columns present → no objects per event
+        df["objects"] = [[] for _ in range(len(df))]
 
     # Step 7: Return as dict with event ID as key
     return df.set_index(ocel.event_id_column).to_dict(orient="index")
