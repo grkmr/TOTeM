@@ -1,7 +1,7 @@
 from typing import Literal
 
 from ocelescope import Resource
-from ocelescope.visualization.default.graph import EdgeArrow, Graph, GraphEdge, GraphNode, GraphvizLayoutConfig
+from ocelescope.visualization.default.graph import EdgeArrow, Graph, GraphEdge, GraphNode, LayoutConfig
 from ocelescope.visualization.util.color import generate_color_map
 from pydantic import BaseModel
 
@@ -30,8 +30,16 @@ class Totem(Resource):
     type: Literal["totem"] = "totem"
 
     def visualize(self) -> Graph:
-        def tr_to_arrow(tr: Temporal_Relation_Constant | None) -> EdgeArrow | None:
-            return {"P": "triangle", "D": "tee", "I": "circle", "Ii": None, "Di": None, None: None}[tr]
+        def tr_to_arrow(tr: Temporal_Relation_Constant | None) -> EdgeArrow:
+            mapping: dict[Temporal_Relation_Constant | None, EdgeArrow] = {
+                "P": "triangle",
+                "D": "tee",
+                "I": "circle",
+                "Ii": None,
+                "Di": None,
+                None: None,
+            }
+            return mapping[tr]
 
         def edge_label_for_forward(e: TotemEdge) -> str:
             parts = []
@@ -50,6 +58,8 @@ class Totem(Resource):
                     label=ot,
                     shape="rectangle",
                     color=color_map.get(ot),
+                    width=max(90.0, len(ot) * 8.0 + 24.0),
+                    height=40,
                 )
             )
 
@@ -77,11 +87,13 @@ class Totem(Resource):
             type="graph",
             nodes=nodes,
             edges=edges,
-            layout_config=GraphvizLayoutConfig(
-                engine="neato",
-                graphAttrs={
-                    "overlap": "false",
-                },
-                edgeAttrs={"len": 4},
+            layout_config=LayoutConfig(
+                elk_options={
+                    "elk.algorithm": "layered",
+                    "elk.direction": "RIGHT",
+                    "elk.edgeRouting": "SPLINES",
+                    "elk.spacing.nodeNode": "60",
+                    "elk.layered.spacing.nodeNodeBetweenLayers": "120",
+                }
             ),
         )

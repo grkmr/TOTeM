@@ -253,7 +253,7 @@ def mine_totem(ocel, tau: float = 1) -> Totem:
     )  # str identifier of the object maps to the last time recorded for that object in the event log
 
     # get a list of all object types (or variable that is filled while passing through the process executions)
-    type_relations: set[set[str, str]] = set()  # stores all connected types
+    type_relations: set[frozenset[str]] = set()  # stores all connected types
     # dict that describes which objects are connected to which types and for each type which object
     # o2o[obj1][type3] = [obj5, obj6]
     o2o: dict[str, dict[str, set[str]]] = dict()
