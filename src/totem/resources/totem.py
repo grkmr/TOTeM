@@ -1,13 +1,33 @@
 from typing import Literal
 
 from ocelescope import Resource
-from ocelescope.visualization.default.graph import EdgeArrow, Graph, GraphEdge, GraphNode, LayoutConfig
+from ocelescope.visualization.default.graph import (
+    EdgeArrow,
+    Graph,
+    GraphEdge,
+    GraphNode,
+    GraphvizLayoutConfig,
+)
 from ocelescope.visualization.util.color import generate_color_map
 from pydantic import BaseModel
 
 Temporal_Relation_Constant = Literal["D", "Di", "I", "Ii", "P"]
 
 Cardinality = Literal["0", "1", "0...1", "1..*", "0...*"]
+
+# Force-directed layout tuned to spread object types further apart.
+# `K` raises the ideal edge length and `sep` adds margin around each node so
+# the graph reads as spaced out rather than clustered.
+TOTEM_GRAPH_LAYOUT = GraphvizLayoutConfig(
+    engine="sfdp",
+    graphAttrs={
+        "overlap": "false",
+        "splines": "spline",
+        "K": 2.4,
+        "repulsiveforce": 3.0,
+        "sep": "+60",
+    },
+)
 
 
 class TotemEdge(BaseModel):
@@ -87,13 +107,5 @@ class Totem(Resource):
             type="graph",
             nodes=nodes,
             edges=edges,
-            layout_config=LayoutConfig(
-                elk_options={
-                    "elk.algorithm": "layered",
-                    "elk.direction": "RIGHT",
-                    "elk.edgeRouting": "SPLINES",
-                    "elk.spacing.nodeNode": "60",
-                    "elk.layered.spacing.nodeNodeBetweenLayers": "120",
-                }
-            ),
+            layout_config=TOTEM_GRAPH_LAYOUT,
         )
