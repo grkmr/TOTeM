@@ -8,7 +8,19 @@ from .util import mine_totem
 
 
 class MineInput(PluginInput):
-    tau: float = Field(title="tau", gt=0, le=1, default=0.9)
+    tau: Annotated[
+        float,
+        Field(
+            gt=0,
+            le=1,
+            default=0.9,
+            title="Support Threshold (τ)",
+            description=(
+                "Minimum fraction of observations supporting a cardinality or temporal "
+                "relation for it to be included. Higher values filter more noise."
+            ),
+        ),
+    ] = 0.9
 
 
 class Totem(Plugin):
