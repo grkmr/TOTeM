@@ -32,15 +32,12 @@ def create_event_dict(ocel: OCEL) -> dict:
     object_cols = list(rename_map.values())
 
     def _normalize_obj_cell(v):
-        if v is None:
-            return []
-        if isinstance(v, float) and math.isnan(v):
+        if v is None or (not isinstance(v, (list, set, tuple, np.ndarray)) and pd.isna(v)):
             return []
         if isinstance(v, list):
             return v
         if isinstance(v, (set, tuple, np.ndarray)):
             return list(v)
-        # fallback: wrap scalar values (e.g., a single object id) into a list
         return [v]
 
     if object_cols:
